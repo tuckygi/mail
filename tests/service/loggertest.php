@@ -2,6 +2,8 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use OCA\Mail\Service\Logger;
+
 class LoggerTest extends \PHPUnit_Framework_TestCase {
 
 	/**
@@ -13,14 +15,14 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 		$baseLogger = $this->getMock('\OCP\ILogger');
 		$baseLogger->expects($this->once())
 			->method($method)
-			->with(
-				$this->equalTo('1'),
-				$this->equalTo(['app' => 'mail'])
-			);
+			->with($this->equalTo('1'), $this->equalTo([
+					'app' => 'mail',
+					'key' => 'value',
+			]));
 
-		$logger = new \OCA\Mail\Service\Logger('mail', $baseLogger);
-		$logger->$method("1");
-    }
+		$logger = new Logger('mail', $baseLogger);
+		$logger->$method("1", ['key' => 'value']);
+	}
 
 	public function providesLoggerMethods() {
 		return [
@@ -34,4 +36,5 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 			['debug'],
 		];
 	}
+
 }
